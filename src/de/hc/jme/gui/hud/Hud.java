@@ -13,6 +13,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
+import de.hc.jme.jme.scene.controll.SceneControll;
 import de.hc.jme.scene.F40Scene;
 
 /**
@@ -130,6 +131,8 @@ public class Hud {
                         this.updateable[1] = this.parent.getVehicles()[0].isGameOver();
                         this.updateable[2] = this.parent.getVehicles()[1].isCongratulation();
                         this.updateable[3] = this.parent.getVehicles()[1].isGameOver();
+                        this.updateable[4] = SceneControll.getDefault().getPoints()[0];
+                        this.updateable[5] = SceneControll.getDefault().getPoints()[1];
                     }
                     
                     if (this.parent.getVehicles()[0].isCongratulation() != (boolean) this.updateable[0]) {
@@ -148,7 +151,16 @@ public class Hud {
                         this.updateable[3] = this.parent.getVehicles()[1].isGameOver();
                         updateHud = true;
                     }
+                    if (SceneControll.getDefault().getPoints()[0] != (int) this.updateable[4]) {
+                        this.updateable[4] = SceneControll.getDefault().getPoints()[0];
+                        updateHud = true;
+                    }
+                    if (SceneControll.getDefault().getPoints()[1] != (int) this.updateable[5]) {
+                        this.updateable[5] = SceneControll.getDefault().getPoints()[1];
+                        updateHud = true;
+                    }
 
+                    
                     if (!updateHud) {
                         if (System.currentTimeMillis() - this.lastUpdate > 1000) {
                             updateHud = true;
@@ -159,7 +171,6 @@ public class Hud {
                 if (updateHud) {
                     this.lastUpdate = System.currentTimeMillis();
                     this.guiNode.detachAllChildren();
-
                     if (!this.parent.shouldBeonDesktop() && !this.parent.getVehicles()[0].isGameOver() && !this.parent.getVehicles()[1].isGameOver()) {        
                         this.padPosition[0] = new float[] {this.displayDimension[0] - this.displayDimension[0]/3.5f, this.displayDimension[1]/14, this.displayDimension[0]/4, displayDimension[0]/4}; 
                         this.padPosition[1] = new float[] {this.displayDimension[0]/3.5f - this.displayDimension[0]/4, this.displayDimension[1] - (this.displayDimension[1]/14 + displayDimension[0]/4), this.displayDimension[0]/4, displayDimension[0]/4}; 
@@ -175,6 +186,21 @@ public class Hud {
                
                     
                     if (this.parent.getVehicles()[0] != null) {
+                        String score = "RED " + SceneControll.getDefault().getPoints()[0] + " / ";
+                        score += "BLUE " + SceneControll.getDefault().getPoints()[0] + " / ";
+                        BitmapText textDisplayScoreRed = new BitmapText(this.arialFont, false);
+                        textDisplayScoreRed.setSize(this.arialFont.getCharSet().getRenderedSize() * 2); 
+                        textDisplayScoreRed.setColor(ColorRGBA.Red);
+                        textDisplayScoreRed.setText("" + SceneControll.getDefault().getPoints()[0]);
+                        textDisplayScoreRed.setLocalTranslation(10f, 50f, 10f);
+                        this.guiNode.attachChild(textDisplayScoreRed);
+                        BitmapText textDisplayScoreBlue = new BitmapText(this.arialFont, false);
+                        textDisplayScoreBlue.setSize(this.arialFont.getCharSet().getRenderedSize() * 2); 
+                        textDisplayScoreBlue.setColor(ColorRGBA.Blue);
+                        textDisplayScoreBlue.setText("" + SceneControll.getDefault().getPoints()[1]);
+                        textDisplayScoreBlue.setLocalTranslation(displayDimension[0] - 30f, displayDimension[1] - 1, 10f);
+                        this.guiNode.attachChild(textDisplayScoreBlue);
+                        
                         if (this.parent.getVehicles()[0].isCongratulation()) {                             
                             float picWidth = this.displayDimension[1];
                             this.picHappy.setWidth(picWidth);
@@ -204,32 +230,6 @@ public class Hud {
                             this.guiNode.attachChild(picSad);     
                         }
                     }
-
-//                    long moveDuration = this.parent.getVehicles()[0].getLastMoveDuration();
-//
-//                    if (moveDuration > 3000 && !this.parent.getVehicles()[0].isGameOver()) {
-//                        Picture pic = new Picture("misc");
-//                        float width = (Float) (displayDimension[0] / 3);
-//                        pic = new Picture("Count Down");
-//                        pic.setWidth(width);
-//                        pic.setHeight(width * 1.2f);
-//                        pic.setImage(this.parent.getAssetManager(), "Textures/0.png", true);
-//                        if (moveDuration < 4000) {
-//                            pic.setImage(this.parent.getAssetManager(), "Textures/5.png", true);
-//                        } else if (moveDuration < 5000) {
-//                            pic.setImage(this.parent.getAssetManager(), "Textures/4.png", true);
-//                        } else if (moveDuration < 6000) {
-//                            pic.setImage(this.parent.getAssetManager(), "Textures/3.png", true);
-//                        } else if (moveDuration < 7000) {
-//                            pic.setImage(this.parent.getAssetManager(), "Textures/2.png", true);
-//                        } else if (moveDuration < 8000) {
-//                            pic.setImage(this.parent.getAssetManager(), "Textures/1.png", true);
-//                        } else {
-//                            this.parent.getVehicles()[0].setGameOver();
-//                        } 
-//                        pic.setPosition(displayDimension[0] / 2 - width / 2, displayDimension[1] / 2 - (width / 2));
-//                        this.guiNode.attachChild(pic); 
-//                    }
                 }
             }
         }

@@ -114,38 +114,38 @@ public abstract class AbstractVehicle {
         this.smokeMat.setBoolean("PointSprite", true);
 
         this.audioGo = new AudioNode(assetManager, "Sounds/zuendung.wav", AudioData.DataType.Buffer);
-        this.audioGo.setPositional(true);
+        this.audioGo.setPositional(false);
         this.audioGo.setLooping(false);
         this.audioGo.setVolume(2);
         this.vehicleNode.attachChild(this.audioGo);
 
         this.audioRun = new AudioNode(assetManager, "Sounds/motor.wav", AudioData.DataType.Buffer);
-        this.audioRun.setPositional(true);
+        this.audioRun.setPositional(false);
         this.audioRun.setLooping(true);
         this.audioRun.setVolume(1);
         this.audioRun.setPitch(this.runPitch[1]);
         this.vehicleNode.attachChild(this.audioRun);
 
         this.audioVelo = new AudioNode(assetManager, "Sounds/test2.wav", AudioData.DataType.Buffer);
-        this.audioVelo.setPositional(true);
+        this.audioVelo.setPositional(false);
         this.audioVelo.setLooping(false);
         this.audioVelo.setVolume(1);
         this.vehicleNode.attachChild(this.audioVelo);
 
         this.audioHorn = new AudioNode(assetManager, "Sounds/horn.wav", AudioData.DataType.Buffer);
-        this.audioHorn.setPositional(true);
+        this.audioHorn.setPositional(false);
         this.audioHorn.setLooping(false);
         this.audioHorn.setVolume(1);
         this.vehicleNode.attachChild(this.audioHorn);
 
         this.audioBack = new AudioNode(assetManager, "Sounds/piepen.wav", AudioData.DataType.Buffer);
-        this.audioBack.setPositional(true);
+        this.audioBack.setPositional(false);
         this.audioBack.setLooping(true);
         this.audioBack.setVolume(1);
         this.vehicleNode.attachChild(this.audioBack);
 
         this.audioYeehaw = new AudioNode(assetManager, "Sounds/yeehaw2.wav", AudioData.DataType.Buffer);
-        this.audioYeehaw.setPositional(true);
+        this.audioYeehaw.setPositional(false);
         this.audioYeehaw.setLooping(false);
         this.audioYeehaw.setVolume(1);
         this.vehicleNode.attachChild(this.audioYeehaw);

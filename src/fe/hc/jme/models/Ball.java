@@ -20,7 +20,7 @@ import de.hc.jme.scene.F40Scene;
 public class Ball implements ITarget{
     private static int count = 0;
     private static final List<RigidBodyControl> rigidBodyControols = new ArrayList<>();
-    private Node ball = new Node("Barrel_" + (++ Ball.count));
+    private Node ball = new Node("Ball_" + (++ Ball.count));
     private Material material;
     private AbstractScene parent;
     private Vector3f position;
@@ -44,7 +44,7 @@ public class Ball implements ITarget{
         Spatial ballSpatial = this.parent.getAssetManager().loadModel("Models/ball_export.j3o");
         ballSpatial.setMaterial(this.material);
         ballSpatial.setLocalTranslation(this.position);
-        ballSpatial.scale(0.7f, 0.7f, 0.7f);
+        ballSpatial.scale(1.2f, 1.2f, 1.2f);
 
         this.ballPhysikAlias = new RigidBodyControl(30f);
         ballSpatial.addControl(this.ballPhysikAlias);
