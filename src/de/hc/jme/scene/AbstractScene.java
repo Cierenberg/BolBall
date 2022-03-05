@@ -110,6 +110,10 @@ public abstract class AbstractScene extends SimpleApplication{
         return this.assetManager;
     }
     
+    public BulletAppState getBulletAppState() {
+        return this.bulletAppState;
+    }
+    
     public PhysicsSpace getPhysicsSpace(){
         return bulletAppState.getPhysicsSpace();
     }

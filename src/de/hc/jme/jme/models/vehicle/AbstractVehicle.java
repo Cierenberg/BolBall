@@ -41,7 +41,7 @@ public abstract class AbstractVehicle {
 
     private AbstractScene parent;
     private AssetManager assetManager;
-    private VehicleControl vehicle;
+    protected VehicleControl vehicle;
     private float maxAccelerationForce = 1.5f;
     private float maxSpeed = 100;
     private float brakeForce = 20.0f;
@@ -95,6 +95,7 @@ public abstract class AbstractVehicle {
     private AudioNode audioHorn = null;
     private AudioNode audioBack = null;
     private AudioNode audioYeehaw = null;
+    private AudioNode audioGoal = null;
     private long lastYehaw = System.currentTimeMillis();
     private float[] runPitch = {0.5f, 0.5f, 1.5f, 0.004f};
 
@@ -150,6 +151,12 @@ public abstract class AbstractVehicle {
         this.audioYeehaw.setVolume(1);
         this.vehicleNode.attachChild(this.audioYeehaw);
 
+        this.audioGoal = new AudioNode(assetManager, "Sounds/goal.wav", AudioData.DataType.Buffer);
+        this.audioGoal.setPositional(false);
+        this.audioGoal.setLooping(false);
+        this.audioGoal.setVolume(1);
+        this.vehicleNode.attachChild(this.audioGoal);
+        
         this.audioGo.play();
 
         this.initJeep(initPosition);
@@ -819,28 +826,15 @@ public abstract class AbstractVehicle {
     }
 
     public void resetPosition() {
-//        this.vehicleNode.setLocalTranslation(this.initPosition);
-//        this.vehicleNode.setLocalRotation(this.rotation);
-
-        
-        
-//        vehicle.setPhysicsLocation(Vector3f.ZERO);
+        this.audioGoal.play();
         vehicle.setPhysicsLocation(this.initPosition);
-//        vehicle.setPhysicsRotation(new Matrix3f());
         vehicle.setPhysicsRotation(this.rotation);
         vehicle.setLinearVelocity(Vector3f.ZERO);
         vehicle.setAngularVelocity(Vector3f.ZERO);
         vehicle.resetSuspension();
-        
-//        this.lastPositions.clear();
-//        this.lastPositions.add(this.initPosition);
-//        this.initCampos = true;
           this.camTarget = this.initPosition.clone();
           this.camTarget.y += 75;
           this.cam.setLocation(camTarget);
-//        this.updateCam();
-          
-          System.out.println(SceneControll.getDefault().getPoints()[0] + " / " + SceneControll.getDefault().getPoints()[1]);
     }
 
     private void put(Node node1, Spatial wheelfr) {

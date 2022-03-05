@@ -1,7 +1,10 @@
 package de.hc.jme.jme.models.vehicle;
 
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import de.hc.jme.jme.scene.controll.SceneControll;
 import de.hc.jme.scene.AbstractScene;
 
 /**

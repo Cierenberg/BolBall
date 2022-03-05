@@ -23,6 +23,8 @@ public class F40Scene extends AbstractScene {
     private F40 f40; 
     private F40Blue f40_blue; 
     private Ball ball;
+    private Ground ground;
+    private Camera cam2;
     private boolean firstInit = true;
     protected ViewPort view2;
     
@@ -44,7 +46,10 @@ public class F40Scene extends AbstractScene {
             this.bulletAppState.getPhysicsSpace().create();
             this.f40 = null;
             this.f40_blue = null;
-            
+            this.ball = null;
+            this.ground = null;
+            this.cam2 = null;
+            this.view2 = null;
             System.gc();
         } else {
             F40Scene.CURRENT = this;
@@ -52,7 +57,7 @@ public class F40Scene extends AbstractScene {
             this.firstInit = false;
         }
 
-        new Ground(this, new Vector3f(0, 100, 0));
+        this.ground = new Ground(this, new Vector3f(0, 100, 0));
         this.getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/Bright/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));        
         this.f40 = new F40(this, jeep, new Vector3f(0, 100, -50), 0);
         this.f40_blue = new F40Blue(this, jeep, new Vector3f(0, 100, 50), 180);
@@ -64,25 +69,17 @@ public class F40Scene extends AbstractScene {
         this.getPhysicsSpace().add(this.f40_blue.getVehicleControl());
         this.f40.setCam(cam);
         
-        
-        Camera cam2 = this.cam.clone();
+        this.cam2 = this.cam.clone();
         this.cam.setViewPort( 0.0f , 1f, 0.0f, 0.5f);
-        cam2.setViewPort( 0.0f , 1f, 0.51f, 1f);
-        cam2.resize(this.settings.getWidth(), this.settings.getHeight(), true);
-        cam.resize(this.settings.getWidth(), this.settings.getHeight(), true);
+        this.cam2.setViewPort( 0.0f , 1f, 0.51f, 1f);
+        this.cam2.resize(this.settings.getWidth(), this.settings.getHeight(), true);
+        this.cam.resize(this.settings.getWidth(), this.settings.getHeight(), true);
         
-        
-        
-//        float ratio = this.settings.getWidth() / (this.settings.getHeight() / 2);
-//        
-//        cam2.setFrustumPerspective(cam.getFr, ratio, this.cam.getFrustumNear(), this.cam.getFrustumNear());
-        this.view2 = renderManager.createMainView("View of camera 2", cam2);
+        this.view2 = renderManager.createMainView("View of camera 2", this.cam2);
         this.view2.setEnabled(true);
         this.view2.attachScene(this.rootNode);
         this.view2.setBackgroundColor(ColorRGBA.Blue);
         this.view2.setClearFlags(false, true, false);
-        
-        
         
         this.f40_blue.setCam(cam2);
         this.f40.setTarget(this.ball.getTarget());

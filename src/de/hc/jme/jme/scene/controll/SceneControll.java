@@ -5,17 +5,28 @@
  */
 package de.hc.jme.jme.scene.controll;
 
+import com.jme3.audio.AudioData;
+import com.jme3.audio.AudioNode;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.control.VehicleControl;
 import de.hc.jme.scene.AbstractScene;
 
 /**
  *
  * @author hendrik
  */
-public class SceneControll {
+public class SceneControll implements PhysicsCollisionListener {
     private static SceneControll instanz = new SceneControll();
     private RigidBodyControl target;
     private int[] points = {0, 0};
+    private PhysicsCollisionObject rigidBall;
+    private AudioNode audioCrash = null;
+    private AudioNode audioKick = null;
+    private AudioNode audioBounce = null;
+
     
     private SceneControll() {
     }
@@ -26,6 +37,25 @@ public class SceneControll {
     
     public void startGame(AbstractScene parent) {
         this.target = parent.getBall().getTarget();
+        this.rigidBall = (PhysicsCollisionObject) this.target;
+        parent.getBulletAppState().getPhysicsSpace().addCollisionListener(this);
+        this.audioCrash = new AudioNode(parent.getAssetManager(), "Sounds/crash.wav", AudioData.DataType.Buffer);
+        this.audioCrash.setPositional(false);
+        this.audioCrash.setLooping(false);
+        this.audioCrash.setVolume(2);
+        parent.getRootNode().attachChild(this.audioCrash);
+
+        this.audioKick = new AudioNode(parent.getAssetManager(), "Sounds/ball.wav", AudioData.DataType.Buffer);
+        this.audioKick.setPositional(false);
+        this.audioKick.setLooping(false);
+        this.audioKick.setVolume(1);
+        parent.getRootNode().attachChild(this.audioKick);
+        
+        this.audioBounce = new AudioNode(parent.getAssetManager(), "Sounds/bounce.wav", AudioData.DataType.Buffer);
+        this.audioBounce.setPositional(false);
+        this.audioBounce.setLooping(false);
+        this.audioBounce.setVolume(1);
+        parent.getRootNode().attachChild(this.audioBounce);
     }
     
     public void checkTarget(AbstractScene parent) {
@@ -36,23 +66,43 @@ public class SceneControll {
                 } else {
                     this.points[1] ++;
                 }
-                AbstractScene.getCurrent().resetPositions();
+                if (this.points[0] >= 6) {
+                    AbstractScene.getCurrent().getVehicles()[1].setGameOver();
+                } else if (this.points[1] >= 6) {
+                    AbstractScene.getCurrent().getVehicles()[0].setGameOver();
+                } else {
+                    AbstractScene.getCurrent().resetPositions();
+                }
             }
-//            if(TargetData.getCurrentTresHold() > this.target.getPhysicsLocation().y) {
-//                if (this.barrelWait ==  Long.MIN_VALUE) {
-//                    this.barrelWait = System.currentTimeMillis();
-//                } else if (System.currentTimeMillis() - 5000 > this.barrelWait) {
-//                    this.target = null;
-//                    this.barrelWait = Long.MIN_VALUE;
-//                    this.target = TargetData.initNext(parent);
-//                }
-//            }
         } 
 
     };
     
     public int[] getPoints() {
         return this.points;
+    }
+  
+    @Override
+    public void collision(PhysicsCollisionEvent event) {        
+        boolean aCar = event.getObjectA() instanceof VehicleControl;
+        boolean bCar = event.getObjectB() instanceof VehicleControl;
+      
+        boolean aBall = event.getObjectA().equals(this.rigidBall);
+        boolean bBall = event.getObjectB().equals(this.rigidBall);
+       
+        boolean crash = aCar && bCar;
+        boolean kick = (aCar && bBall) || (aBall && bCar);
+        
+        if (crash) {
+            this.audioCrash.play();
+        }
+        if (kick) {
+            this.audioKick.play();
+        }
+        if (!kick && (aBall || bBall)) {
+            this.audioBounce.play();
+        }
+
     }
 
 }

@@ -46,6 +46,7 @@ public class F40 extends AbstractVehicle {
         compoundShape.addChildShape(base, new Vector3f(0, 0.5f, -0.4f));
         compoundShape.addChildShape(hut, new Vector3f(0, 1f, -.5f));
         compoundShape.addChildShape(heck, new Vector3f(0, 1f, -3.2f));
+        
         return compoundShape;
     }
 
