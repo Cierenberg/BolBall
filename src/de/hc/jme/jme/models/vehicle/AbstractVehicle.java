@@ -99,7 +99,7 @@ public abstract class AbstractVehicle {
     private long lastYehaw = System.currentTimeMillis();
     private float[] runPitch = {0.5f, 0.5f, 1.5f, 0.004f};
 
-    public AbstractVehicle(AbstractScene parent, boolean sport, Vector3f initPosition, float rotateY) {
+    public AbstractVehicle(AbstractScene parent, Vector3f initPosition, float rotateY) {
         this.parent = parent;
         this.sport = sport;
         this.rotateY = rotateY;
@@ -110,7 +110,7 @@ public abstract class AbstractVehicle {
         this.vehicleNode = new Node("vehicleNode");
         this.assetManager = this.parent.getAssetManager();
         this.smokeMat = new Material(this.parent.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
-        this.smokeMat.setTexture("Texture", this.parent.getAssetManager().loadTexture("Textures/Terrain/dust.png"));
+        this.smokeMat.setTexture("Texture", this.parent.getAssetManager().loadTexture("Textures/dust.png"));
         this.smokeMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         this.smokeMat.setBoolean("PointSprite", true);
 
@@ -740,29 +740,29 @@ public abstract class AbstractVehicle {
     }
 
     private void explode() {
-        Material shockWaveMaterial = new Material(
-                this.parent.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
-        shockWaveMaterial.setTexture("Texture",
-                this.parent.getAssetManager().loadTexture("Effects/Explosion/shockwave.png"));
-
-        ParticleEmitter explosion = new ParticleEmitter("explosion effect", Type.Triangle, 1);
-        this.parent.getRootNode().attachChild(explosion);
-        Vector3f location = this.vehicle.getPhysicsLocation();
-        location.y = location.y + 1;
-        explosion.setLocalTranslation(location);
-        explosion.setFaceNormal(Vector3f.UNIT_Y);
-        explosion.emitAllParticles();
-        explosion.setParticlesPerSec(0);
-        explosion.setMaterial(shockWaveMaterial);
-        explosion.setStartColor(ColorRGBA.Blue);
-        explosion.setEndColor(ColorRGBA.LightGray);
-
-        explosion.setStartSize(5f);
-        explosion.setEndSize(20f);
-
-        explosion.setImagesX(1); // columns
-        explosion.setImagesY(1); // rows
-        explosion.setSelectRandomImage(false);
+//        Material shockWaveMaterial = new Material(
+//                this.parent.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
+//        shockWaveMaterial.setTexture("Texture",
+//                this.parent.getAssetManager().loadTexture("Effects/Explosion/shockwave.png"));
+//
+//        ParticleEmitter explosion = new ParticleEmitter("explosion effect", Type.Triangle, 1);
+//        this.parent.getRootNode().attachChild(explosion);
+//        Vector3f location = this.vehicle.getPhysicsLocation();
+//        location.y = location.y + 1;
+//        explosion.setLocalTranslation(location);
+//        explosion.setFaceNormal(Vector3f.UNIT_Y);
+//        explosion.emitAllParticles();
+//        explosion.setParticlesPerSec(0);
+//        explosion.setMaterial(shockWaveMaterial);
+//        explosion.setStartColor(ColorRGBA.Blue);
+//        explosion.setEndColor(ColorRGBA.LightGray);
+//
+//        explosion.setStartSize(5f);
+//        explosion.setEndSize(20f);
+//
+//        explosion.setImagesX(1); // columns
+//        explosion.setImagesY(1); // rows
+//        explosion.setSelectRandomImage(false);
 
         this.vehicle.removeWheel(0);
         this.vehicle.removeWheel(0);
@@ -788,6 +788,7 @@ public abstract class AbstractVehicle {
             }
         }
         this.vehicle.applyImpulse(new Vector3f(1000, 20000, 100), Vector3f.ZERO);
+        this.parent.reserViewport();
     }
 
     public void setGameOver() {

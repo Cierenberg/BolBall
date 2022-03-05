@@ -77,9 +77,6 @@ public class Hud {
             this.picPad[0].setImage(this.parent.getAssetManager(), "Textures/keypad.png", true);
             this.picPad[1].setImage(this.parent.getAssetManager(), "Textures/keypad.png", true);
             this.picHappy.setImage(this.parent.getAssetManager(), "Textures/congratulation.png", true);
-            this.picForward.setImage(this.parent.getAssetManager(), "Textures/forward.png", true);
-            this.picBackward.setImage(this.parent.getAssetManager(), "Textures/backward.png", true);
-            this.picTacho.setImage(this.parent.getAssetManager(), "Textures/tacho.png", true);
             this.picSad.setImage(this.parent.getAssetManager(), "Textures/gameover.png", true);
             
             this.parent.getRootNode().attachChild(this.audioGameOver);
@@ -97,7 +94,6 @@ public class Hud {
     
     public void startTargetTime() {
         this.targetTime = System.currentTimeMillis() + 1000 * 60 * 7;
-//        this.targetTime = System.currentTimeMillis() + 1000 * 10;
     }
     
     public boolean isTagetTimeStarted() {

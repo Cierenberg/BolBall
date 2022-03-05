@@ -1,4 +1,6 @@
-package mygame;
+
+package de.hc.bolball;
+
 import com.jme3.system.AppSettings;
 import de.hc.jme.scene.F40Scene;
 

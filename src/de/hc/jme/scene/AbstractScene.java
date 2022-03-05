@@ -17,9 +17,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import de.hc.jme.gui.controller.GuiController;
-import de.hc.jme.gui.hud.Hud;
 import de.hc.jme.jme.models.vehicle.AbstractVehicle;
-import de.hc.jme.jme.models.vehicle.F40;
 import de.hc.jme.jme.utility.Utility;
 import fe.hc.jme.models.Ball;
 import java.lang.reflect.Field;
@@ -143,9 +141,13 @@ public abstract class AbstractScene extends SimpleApplication{
     
     public abstract boolean shouldBeonDesktop();
     
+    public void reserViewport() {
+        this.cam.setViewPort( 0.0f , 1f, 0.0f, 1f);
+    }
+    
     // Project Specials
     
-    public abstract void init(int islandIndex, boolean jeep);
+    public abstract void init();
 
     public abstract void reInit();
     

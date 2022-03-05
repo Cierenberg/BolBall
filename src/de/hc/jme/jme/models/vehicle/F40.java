@@ -19,8 +19,8 @@ import de.hc.jme.scene.AbstractScene;
  */
 public class F40 extends AbstractVehicle {
     
-    public F40(AbstractScene parent, boolean sport, Vector3f initPosition, float rotateY) {
-        super(parent, sport, initPosition, rotateY);
+    public F40(AbstractScene parent, Vector3f initPosition, float rotateY) {
+        super(parent, initPosition, rotateY);
     }
 
     @Override

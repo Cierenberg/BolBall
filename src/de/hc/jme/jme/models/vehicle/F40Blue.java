@@ -13,8 +13,8 @@ import de.hc.jme.scene.AbstractScene;
  */
 public class F40Blue extends F40{
     
-    public F40Blue(AbstractScene parent, boolean sport, Vector3f initPosition, float rotateY) {
-        super(parent, sport, initPosition, rotateY);
+    public F40Blue(AbstractScene parent, Vector3f initPosition, float rotateY) {
+        super(parent, initPosition, rotateY);
     }
     
     @Override

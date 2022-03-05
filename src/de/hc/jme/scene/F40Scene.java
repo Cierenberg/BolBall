@@ -36,7 +36,7 @@ public class F40Scene extends AbstractScene {
         this.simpleInitApp();
     }
     
-    public void init(int islandIndex, boolean jeep) {
+    public void init() {
         this.memUp();
         Hud.getDefault().setHide(false);
         if (!this.firstInit) {
@@ -59,8 +59,8 @@ public class F40Scene extends AbstractScene {
 
         this.ground = new Ground(this, new Vector3f(0, 100, 0));
         this.getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/Bright/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));        
-        this.f40 = new F40(this, jeep, new Vector3f(0, 100, -50), 0);
-        this.f40_blue = new F40Blue(this, jeep, new Vector3f(0, 100, 50), 180);
+        this.f40 = new F40(this, new Vector3f(0, 100, -50), 0);
+        this.f40_blue = new F40Blue(this,new Vector3f(0, 100, 50), 180);
         this.ball = new Ball(this, new Vector3f(0, 100, 0), true);
         this.rootNode.attachChild(this.f40.getVehicleNode());
         this.rootNode.attachChild(this.f40_blue.getVehicleNode());
@@ -234,5 +234,6 @@ public class F40Scene extends AbstractScene {
     public Ball getBall() {
         return this.ball;
     }
+    
 
 }
