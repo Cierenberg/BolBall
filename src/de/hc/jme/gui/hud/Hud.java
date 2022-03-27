@@ -77,8 +77,7 @@ public class Hud {
             this.picPad[0].setImage(this.parent.getAssetManager(), "Textures/keypad.png", true);
             this.picPad[1].setImage(this.parent.getAssetManager(), "Textures/keypad.png", true);
             this.picHappy.setImage(this.parent.getAssetManager(), "Textures/congratulation.png", true);
-            this.picSad.setImage(this.parent.getAssetManager(), "Textures/gameover.png", true);
-            
+            this.picSad.setImage(this.parent.getAssetManager(), "Textures/gameover.png", true);            
             this.parent.getRootNode().attachChild(this.audioGameOver);
             this.parent.getRootNode().attachChild(this.audioCongratulation);
         }
@@ -185,16 +184,16 @@ public class Hud {
                         String score = "RED " + SceneControll.getDefault().getPoints()[0] + " / ";
                         score += "BLUE " + SceneControll.getDefault().getPoints()[0] + " / ";
                         BitmapText textDisplayScoreRed = new BitmapText(this.arialFont, false);
-                        textDisplayScoreRed.setSize(this.arialFont.getCharSet().getRenderedSize() * 2); 
+                        textDisplayScoreRed.setSize(this.arialFont.getCharSet().getRenderedSize() * 4); 
                         textDisplayScoreRed.setColor(ColorRGBA.Red);
                         textDisplayScoreRed.setText("" + SceneControll.getDefault().getPoints()[0]);
-                        textDisplayScoreRed.setLocalTranslation(10f, 50f, 10f);
+                        textDisplayScoreRed.setLocalTranslation(10f, 100f, 10f);
                         this.guiNode.attachChild(textDisplayScoreRed);
                         BitmapText textDisplayScoreBlue = new BitmapText(this.arialFont, false);
-                        textDisplayScoreBlue.setSize(this.arialFont.getCharSet().getRenderedSize() * 2); 
+                        textDisplayScoreBlue.setSize(this.arialFont.getCharSet().getRenderedSize() * 4); 
                         textDisplayScoreBlue.setColor(ColorRGBA.Blue);
                         textDisplayScoreBlue.setText("" + SceneControll.getDefault().getPoints()[1]);
-                        textDisplayScoreBlue.setLocalTranslation(displayDimension[0] - 30f, displayDimension[1] - 1, 10f);
+                        textDisplayScoreBlue.setLocalTranslation(displayDimension[0] - 60f, displayDimension[1] - 1, 10f);
                         this.guiNode.attachChild(textDisplayScoreBlue);
                         
                         if (this.parent.getVehicles()[0].isCongratulation()) {                             

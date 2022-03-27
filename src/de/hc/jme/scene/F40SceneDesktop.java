@@ -28,11 +28,12 @@ public class F40SceneDesktop extends F40Scene{
     private static AppSettings initDisplay() {
         GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         DisplayMode[] modes = device.getDisplayModes();
-        DisplayMode biggest = modes[modes.length - 1];
+//        DisplayMode biggest = modes[modes.length - 1];
+        DisplayMode biggest = modes[3];
         AppSettings settings = new AppSettings(true);
         settings.put("Width", biggest.getWidth());
         settings.put("Height", biggest.getHeight());
-        settings.put("Title", "JeepScene");
+        settings.put("Title", "BolBall");
         for (DisplayMode m : modes) {
             System.out.println(m.getWidth() + "/" + m.getHeight());
         }

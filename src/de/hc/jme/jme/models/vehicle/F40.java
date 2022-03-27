@@ -34,7 +34,7 @@ public class F40 extends AbstractVehicle {
 
     @Override
     public Spatial getBodyModel() {
-        return this.getAssetManager().loadModel("Models/f40_export3.j3o"); 
+        return this.getAssetManager().loadModel("Models/f40_export5.j3o"); 
     }
     
     public CompoundCollisionShape getCompoundCollisionShape() {
@@ -42,10 +42,15 @@ public class F40 extends AbstractVehicle {
         BoxCollisionShape base = new BoxCollisionShape(new Vector3f(1.5f, 0.3f, 3.3f));
         BoxCollisionShape hut = new BoxCollisionShape(new Vector3f(1.3f, 0.3f, 1.2f));
         BoxCollisionShape heck = new BoxCollisionShape(new Vector3f(1.5f, 0.3f, 0.3f));
-
-        compoundShape.addChildShape(base, new Vector3f(0, 0.5f, -0.4f));
-        compoundShape.addChildShape(hut, new Vector3f(0, 1f, -.5f));
-        compoundShape.addChildShape(heck, new Vector3f(0, 1f, -3.2f));
+        BoxCollisionShape flkf = new BoxCollisionShape(new Vector3f(.2f, 0.1f, 0.4f));     
+        BoxCollisionShape frkf = new BoxCollisionShape(new Vector3f(.2f, 0.1f, 0.4f));     
+        
+        
+        compoundShape.addChildShape(base, new Vector3f(0, 0.5f, -0.3f));
+        compoundShape.addChildShape(hut, new Vector3f(0, 1f, -.4f));
+        compoundShape.addChildShape(heck, new Vector3f(0, 1f, -3.1f));
+        compoundShape.addChildShape(flkf, new Vector3f(1.4f, 0.3f, +3.45f));
+        compoundShape.addChildShape(frkf, new Vector3f(-1.4f, 0.3f, +3.45f));
         
         return compoundShape;
     }
@@ -91,7 +96,7 @@ public class F40 extends AbstractVehicle {
 
     @Override
     public Spatial getWhellModel() {
-        return this.getAssetManager().loadModel("Models/wheel_export.j3o");
+        return this.getAssetManager().loadModel("Models/wheel_export2.j3o");
     }
 
     @Override

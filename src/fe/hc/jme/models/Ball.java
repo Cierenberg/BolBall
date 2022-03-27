@@ -44,7 +44,7 @@ public class Ball implements ITarget{
         Spatial ballSpatial = this.parent.getAssetManager().loadModel("Models/ball_export.j3o");
         ballSpatial.setMaterial(this.material);
         ballSpatial.setLocalTranslation(this.position);
-        ballSpatial.scale(1.2f, 1.2f, 1.2f);
+        ballSpatial.scale(0.7f, 0.7f, 0.7f);
 
         this.ballPhysikAlias = new RigidBodyControl(30f);
         ballSpatial.addControl(this.ballPhysikAlias);

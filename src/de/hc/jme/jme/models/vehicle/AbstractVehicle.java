@@ -614,7 +614,7 @@ public abstract class AbstractVehicle {
         float radius = 0.8f;
         float restLength = 0.3f;
         float yOff = 0.5f;
-        float xOff = 1.6f;
+        float xOff = 1.5f;
         float zOff = 1.9f;
         this.vehicle.setFriction(2.4f);
         this.vehicle.setFrictionSlip(2.4f);
@@ -629,8 +629,17 @@ public abstract class AbstractVehicle {
         Spatial wheelfr = this.getWhellModel();
         wheelfr.setMaterial(mat_wheel);
         node1.attachChild(wheelfr);
-        wheelfr.rotate(0, FastMath.PI, 0);
-        wheelfr.setLocalTranslation(.3f, 0f, 0f);
+        wheelfr.rotate(0, 0, FastMath.PI/2);
+        System.out.println(parent.shouldBeonDesktop());
+        if (!parent.shouldBeonDesktop()) {
+            System.out.println("*");
+            wheelfr.rotate(FastMath.PI, 0, 0);
+        }
+        if (parent.shouldBeonDesktop()) {
+            wheelfr.setLocalTranslation(.3f, 0f, 0f);
+        } else {
+            wheelfr.setLocalTranslation(-.3f, 0f, 0f);
+        }
         Vector3f wheelScale = this.getBodyScale();
        
         wheelfr.scale(wheelScale.x, wheelScale.y, wheelScale.z);
@@ -642,8 +651,18 @@ public abstract class AbstractVehicle {
         Spatial wheelfl = this.getWhellModel();
         wheelfl.setMaterial(mat_wheel);
         node2.attachChild(wheelfl);
-        wheelfl.setLocalTranslation(-.3f, 0f, 0f);
+        wheelfl.rotate(0, 0, -FastMath.PI/2);
+        if (!parent.shouldBeonDesktop()) {
+            wheelfl.rotate(FastMath.PI, 0, 0);
+        }
+        if (parent.shouldBeonDesktop()) {
+            wheelfl.setLocalTranslation(-.3f, 0f, 0f);
+        } else {
+            wheelfl.setLocalTranslation(.3f, 0f, 0f);
+        }
+//        wheelfl.setLocalTranslation(-.3f, 0f, 0f);
         wheelfl.scale(wheelScale.x, wheelScale.y, wheelScale.z);
+        
         wheelfl.setShadowMode(RenderQueue.ShadowMode.Cast);
         this.wheelMap.put(node2, wheelfl);
         this.vehicle.addWheel(node2, new Vector3f(xOff, yOff, zOff),
@@ -652,7 +671,10 @@ public abstract class AbstractVehicle {
         Spatial wheelrr = this.getWhellModel();
         wheelrr.setMaterial(mat_wheel);
         node3.attachChild(wheelrr);
-        wheelrr.rotate(0, FastMath.PI, 0);
+        wheelrr.rotate(0, 0, FastMath.PI/2);
+        if (!parent.shouldBeonDesktop()) {
+            wheelrr.rotate(FastMath.PI, 0, 0);
+        }
         wheelrr.scale(wheelScale.x, wheelScale.y, wheelScale.z);
         wheelrr.setShadowMode(RenderQueue.ShadowMode.Cast);
         this.wheelMap.put(node3, wheelrr);
@@ -662,6 +684,10 @@ public abstract class AbstractVehicle {
         Spatial wheelrl = this.getWhellModel();
         wheelrl.setMaterial(mat_wheel);
         node4.attachChild(wheelrl);
+        wheelrl.rotate(0, 0, -FastMath.PI/2);
+        if (!parent.shouldBeonDesktop()) {
+            wheelrl.rotate(FastMath.PI, 0, 0);
+        }
         wheelrl.scale(wheelScale.x, wheelScale.y, wheelScale.z);
         wheelrl.setShadowMode(RenderQueue.ShadowMode.Cast);
         this.wheelMap.put(node4, wheelrl);
@@ -740,34 +766,34 @@ public abstract class AbstractVehicle {
     }
 
     private void explode() {
-//        Material shockWaveMaterial = new Material(
-//                this.parent.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
-//        shockWaveMaterial.setTexture("Texture",
-//                this.parent.getAssetManager().loadTexture("Effects/Explosion/shockwave.png"));
-//
-//        ParticleEmitter explosion = new ParticleEmitter("explosion effect", Type.Triangle, 1);
-//        this.parent.getRootNode().attachChild(explosion);
-//        Vector3f location = this.vehicle.getPhysicsLocation();
-//        location.y = location.y + 1;
-//        explosion.setLocalTranslation(location);
-//        explosion.setFaceNormal(Vector3f.UNIT_Y);
-//        explosion.emitAllParticles();
-//        explosion.setParticlesPerSec(0);
-//        explosion.setMaterial(shockWaveMaterial);
-//        explosion.setStartColor(ColorRGBA.Blue);
-//        explosion.setEndColor(ColorRGBA.LightGray);
-//
-//        explosion.setStartSize(5f);
-//        explosion.setEndSize(20f);
-//
-//        explosion.setImagesX(1); // columns
-//        explosion.setImagesY(1); // rows
-//        explosion.setSelectRandomImage(false);
+        Material shockWaveMaterial = new Material(
+                this.parent.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
+        shockWaveMaterial.setTexture("Texture",
+                this.parent.getAssetManager().loadTexture("Effects/Explosion/shockwave.png"));
 
-        this.vehicle.removeWheel(0);
-        this.vehicle.removeWheel(0);
-        this.vehicle.removeWheel(0);
-        this.vehicle.removeWheel(0);
+        ParticleEmitter explosion = new ParticleEmitter("explosion effect", Type.Triangle, 1);
+        this.parent.getRootNode().attachChild(explosion);
+        Vector3f location = this.vehicle.getPhysicsLocation();
+        location.y = location.y + 1;
+        explosion.setLocalTranslation(location);
+        explosion.setFaceNormal(Vector3f.UNIT_Y);
+        explosion.emitAllParticles();
+        explosion.setParticlesPerSec(0);
+        explosion.setMaterial(shockWaveMaterial);
+        explosion.setStartColor(ColorRGBA.Blue);
+        explosion.setEndColor(ColorRGBA.LightGray);
+
+        explosion.setStartSize(5f);
+        explosion.setEndSize(20f);
+
+        explosion.setImagesX(1); // columns
+        explosion.setImagesY(1); // rows
+        explosion.setSelectRandomImage(false);
+
+//        this.vehicle.removeWheel(0);
+//        this.vehicle.removeWheel(0);
+//        this.vehicle.removeWheel(0);
+//        this.vehicle.removeWheel(0);
         Material mat_wheel = this.getWheelMaterial();
         for (Node node : this.wheelMap.keySet()) {
             Node tmp = new Node();
