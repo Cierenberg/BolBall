@@ -9,19 +9,23 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
 import de.hc.jme.gui.controller.GuiController;
 import de.hc.jme.gui.hud.Hud;
 import de.hc.jme.jme.models.vehicle.AbstractVehicle;
 import de.hc.jme.jme.models.vehicle.F40;
-import de.hc.jme.jme.models.vehicle.F40Blue;
+import de.hc.jme.jme.models.vehicle.Lambo;
 import de.hc.jme.jme.scene.controll.SceneControll;
 import fe.hc.jme.models.Ball;
 import fe.hc.jme.models.Ground;
 
 public class F40Scene extends AbstractScene {
-    private F40 f40; 
-    private F40Blue f40_blue; 
+//    private F40 f40; 
+//    private Lambo lambo; 
+//    protected DirectionalLightShadowRenderer dlsr2;
+    private AbstractVehicle f40; 
+    private AbstractVehicle lambo; 
     private Ball ball;
     private Ground ground;
     private Camera cam2;
@@ -45,7 +49,7 @@ public class F40Scene extends AbstractScene {
             this.bulletAppState.getPhysicsSpace().destroy();
             this.bulletAppState.getPhysicsSpace().create();
             this.f40 = null;
-            this.f40_blue = null;
+            this.lambo = null;
             this.ball = null;
             this.ground = null;
             this.cam2 = null;
@@ -60,13 +64,14 @@ public class F40Scene extends AbstractScene {
         this.ground = new Ground(this, new Vector3f(0, 100, 0));
         this.getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/Bright/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));        
         this.f40 = new F40(this, new Vector3f(0, 100, -50), 0);
-        this.f40_blue = new F40Blue(this,new Vector3f(0, 100, 50), 180);
+//        this.f40 = new Lambo(this, new Vector3f(0, 100, -50), 0);
+        this.lambo = new Lambo(this,new Vector3f(0, 100, 50), 180);
         this.ball = new Ball(this, new Vector3f(0, 100, 0), true);
         this.rootNode.attachChild(this.f40.getVehicleNode());
-        this.rootNode.attachChild(this.f40_blue.getVehicleNode());
+        this.rootNode.attachChild(this.lambo.getVehicleNode());
         this.rootNode.attachChild(this.ball.getNode());
         this.getPhysicsSpace().add(this.f40.getVehicleControl());
-        this.getPhysicsSpace().add(this.f40_blue.getVehicleControl());
+        this.getPhysicsSpace().add(this.lambo.getVehicleControl());
         this.f40.setCam(cam);
         
         this.cam2 = this.cam.clone();
@@ -80,10 +85,13 @@ public class F40Scene extends AbstractScene {
         this.view2.attachScene(this.rootNode);
         this.view2.setBackgroundColor(ColorRGBA.Blue);
         this.view2.setClearFlags(false, true, false);
+//        if (this.dlsr2 != null) {
+//            this.view2.addProcessor(this.dlsr2);
+//        }
         
-        this.f40_blue.setCam(cam2);
+        this.lambo.setCam(cam2);
         this.f40.setTarget(this.ball.getTarget());
-        this.f40_blue.setTarget(this.ball.getTarget());
+        this.lambo.setTarget(this.ball.getTarget());
         
         SceneControll.getDefault().startGame(this);
     }
@@ -125,19 +133,19 @@ public class F40Scene extends AbstractScene {
                f40.resetPosition();
             }
             if (binding.equals("Left2")) {
-                f40_blue.steerLeft();
+                lambo.steerLeft();
             } 
             if (binding.equals("Right2")) {
-                f40_blue.steerRight(); 
+                lambo.steerRight(); 
             }
             if (binding.equals("Up2")) {
-                f40_blue.accelerate();
+                lambo.accelerate();
             }
             if (binding.equals("Down2")) {
-               f40_blue.brake();
+               lambo.brake();
             }
             if (binding.equals("Space2")) {
-               f40_blue.horn();
+               lambo.horn();
             }
 //            if (binding.equals("Reset")) {
 //               f40.turbo();
@@ -191,9 +199,9 @@ public class F40Scene extends AbstractScene {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (this.f40 != null && this.f40_blue != null) {
+        if (this.f40 != null && this.lambo != null) {
             this.f40.update();
-            this.f40_blue.update();
+            this.lambo.update();
             Hud.getDefault().update();
         } else {
             Hud.getDefault().clean();
@@ -211,13 +219,13 @@ public class F40Scene extends AbstractScene {
 
     @Override
     public AbstractVehicle[] getVehicles() {
-        return new AbstractVehicle[] {this.f40, this.f40_blue}; 
+        return new AbstractVehicle[] {this.f40, this.lambo}; 
     }
 
     @Override
     public void setLooser(AbstractVehicle looser) {
         if (looser.equals(this.f40)) {
-            this.f40_blue.setCongratulation();
+            this.lambo.setCongratulation();
         } else {
             this.f40.setCongratulation();
         }
@@ -226,7 +234,7 @@ public class F40Scene extends AbstractScene {
     
     public void resetPositions() {
         this.f40.resetPosition();
-        this.f40_blue.resetPosition();
+        this.lambo.resetPosition();
         this.ball.Replace();
     }
     

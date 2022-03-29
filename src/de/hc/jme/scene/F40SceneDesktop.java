@@ -69,8 +69,11 @@ public class F40SceneDesktop extends F40Scene{
 
         final int SHADOWMAP_SIZE = 512;
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+//        this.dlsr2 = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
         dlsr.setLight(sun);
         dlsr.setShadowIntensity(0.7f);
+//        this.dlsr2.setLight(sun);
+//        this.dlsr2.setShadowIntensity(0.7f);
         this.viewPort.addProcessor(dlsr);
     }
     

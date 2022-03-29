@@ -5,9 +5,10 @@
         <group>
             <file>file:/home/hendrik/jmonkeyplatform/workspace/BolBall/src/de/hc/jme/gui/hud/Hud.java</file>
             <file>file:/home/hendrik/jmonkeyplatform/workspace/BolBall/src/de/hc/jme/jme/models/vehicle/AbstractVehicle.java</file>
-            <file>file:/home/hendrik/jmonkeyplatform/workspace/BolBall/src/fe/hc/jme/models/Ball.java</file>
+            <file>file:/home/hendrik/jmonkeyplatform/workspace/BolBall/src/de/hc/jme/jme/models/vehicle/Lambo.java</file>
             <file>file:/home/hendrik/jmonkeyplatform/workspace/BolBall/src/de/hc/jme/scene/F40SceneDesktop.java</file>
             <file>file:/home/hendrik/jmonkeyplatform/workspace/BolBall/src/de/hc/jme/scene/F40Scene.java</file>
+            <file>file:/home/hendrik/jmonkeyplatform/workspace/BolBall/src/de/hc/jme/jme/models/vehicle/F40.java</file>
         </group>
     </open-files>
 </project-private>

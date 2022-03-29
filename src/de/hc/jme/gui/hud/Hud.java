@@ -191,7 +191,7 @@ public class Hud {
                         this.guiNode.attachChild(textDisplayScoreRed);
                         BitmapText textDisplayScoreBlue = new BitmapText(this.arialFont, false);
                         textDisplayScoreBlue.setSize(this.arialFont.getCharSet().getRenderedSize() * 4); 
-                        textDisplayScoreBlue.setColor(ColorRGBA.Blue);
+                        textDisplayScoreBlue.setColor(ColorRGBA.Orange);
                         textDisplayScoreBlue.setText("" + SceneControll.getDefault().getPoints()[1]);
                         textDisplayScoreBlue.setLocalTranslation(displayDimension[0] - 60f, displayDimension[1] - 1, 10f);
                         this.guiNode.attachChild(textDisplayScoreBlue);

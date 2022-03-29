@@ -19,7 +19,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.math.FastMath;
-import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue;
@@ -51,7 +50,7 @@ public abstract class AbstractVehicle {
     private float accelerationValue = 0;
     private float maxSuspensionForce = 10000.0f;
     final private Vector3f jumpForce = new Vector3f(0, 2000, 0);
-    private Node vehicleNode;
+    protected Node vehicleNode;
     private boolean sport;
     private boolean forward = true;
     protected Camera cam;
@@ -92,7 +91,7 @@ public abstract class AbstractVehicle {
     private AudioNode audioGo = null;
     private AudioNode audioRun = null;
     private AudioNode audioVelo = null;
-    private AudioNode audioHorn = null;
+    protected AudioNode audioHorn = null;
     private AudioNode audioBack = null;
     private AudioNode audioYeehaw = null;
     private AudioNode audioGoal = null;
@@ -260,7 +259,9 @@ public abstract class AbstractVehicle {
 
         for (int i = 0; i < 4; ++i) {
             if (this.vehicle.getWheel(i).getSkidInfo() < treshold && this.vehicle.getWheel(i).getSkidInfo() > 0) {
-                Vector3f position = this.vehicle.getWheel(i).getWheelSpatial().getWorldTranslation();
+                int wheel = (i + 1) % 4;
+                
+                Vector3f position = this.vehicle.getWheel(wheel).getWheelSpatial().getWorldTranslation();
                 position.y -= 0.4f;
                 this.addDust(position);
             }
@@ -557,7 +558,7 @@ public abstract class AbstractVehicle {
     
     public abstract Material getWheelMaterial();
 
-    public abstract Spatial getWhellModel();
+    public abstract Spatial getWhellModel(boolean rear);
 
     public abstract Vector3f getWheelScale();
     
@@ -575,6 +576,8 @@ public abstract class AbstractVehicle {
 
     public abstract float getDampValue();
 
+    public abstract float getBodyYaw();
+    
     private void initJeep(Vector3f initPosition) {
         Material mat_body;
         mat_body = this.getBodyTextureMaterial();
@@ -593,9 +596,13 @@ public abstract class AbstractVehicle {
         this.vehicleNode.attachChild(this.body);
         this.body.setLocalTranslation(this.getLocalBodyTranslation());
         this.body.rotate(0, FastMath.PI, 0);
-//        this.body.rotate((float) Math.toRadians(-2), 0, 0);
+        this.body.rotate((float) Math.toRadians(2.5), 0, 0);
         Vector3f scale = this.getBodyScale();
         this.body.scale(scale.x, scale.y, scale.z);
+
+        
+
+        
         this.vehicle = new VehicleControl(compoundShape, this.getWeight());
 
         this.vehicleNode.addControl(vehicle);
@@ -611,11 +618,23 @@ public abstract class AbstractVehicle {
         // Todo
         Vector3f wheelDirection = new Vector3f(0, -1, 0); // was 0, -1, 0
         Vector3f wheelAxle = new Vector3f(-1, 0, 0); // was -1, 0, 0
-        float radius = 0.8f;
+        float radius = 0.5f;
+        
+        
+        
+        
         float restLength = 0.3f;
         float yOff = 0.5f;
         float xOff = 1.5f;
-        float zOff = 1.9f;
+//        float zOff = 1.9f;
+        
+
+
+        float zOff = 2f;
+
+
+        
+        
         this.vehicle.setFriction(2.4f);
         this.vehicle.setFrictionSlip(2.4f);
         this.rotation = this.vehicle.getPhysicsRotation();
@@ -626,10 +645,11 @@ public abstract class AbstractVehicle {
         
         Material mat_wheel = this.getWheelMaterial();
         Node node1 = new Node("wheel 1 node");
-        Spatial wheelfr = this.getWhellModel();
+        Spatial wheelfr = this.getWhellModel(false);
         wheelfr.setMaterial(mat_wheel);
         node1.attachChild(wheelfr);
         wheelfr.rotate(0, 0, FastMath.PI/2);
+
         System.out.println(parent.shouldBeonDesktop());
         if (!parent.shouldBeonDesktop()) {
             System.out.println("*");
@@ -640,7 +660,7 @@ public abstract class AbstractVehicle {
         } else {
             wheelfr.setLocalTranslation(-.3f, 0f, 0f);
         }
-        Vector3f wheelScale = this.getBodyScale();
+        Vector3f wheelScale = this.getWheelScale();
        
         wheelfr.scale(wheelScale.x, wheelScale.y, wheelScale.z);
         wheelfr.setShadowMode(RenderQueue.ShadowMode.Cast);
@@ -648,7 +668,7 @@ public abstract class AbstractVehicle {
         this.vehicle.addWheel(node1, new Vector3f(-xOff, yOff, zOff),
                 wheelDirection, wheelAxle, restLength, radius, true);
         Node node2 = new Node("wheel 2 node");
-        Spatial wheelfl = this.getWhellModel();
+        Spatial wheelfl = this.getWhellModel(false);
         wheelfl.setMaterial(mat_wheel);
         node2.attachChild(wheelfl);
         wheelfl.rotate(0, 0, -FastMath.PI/2);
@@ -668,7 +688,7 @@ public abstract class AbstractVehicle {
         this.vehicle.addWheel(node2, new Vector3f(xOff, yOff, zOff),
                 wheelDirection, wheelAxle, restLength, radius, true);
         Node node3 = new Node("wheel 3 node");
-        Spatial wheelrr = this.getWhellModel();
+        Spatial wheelrr = this.getWhellModel(true);
         wheelrr.setMaterial(mat_wheel);
         node3.attachChild(wheelrr);
         wheelrr.rotate(0, 0, FastMath.PI/2);
@@ -681,7 +701,7 @@ public abstract class AbstractVehicle {
         vehicle.addWheel(node3, new Vector3f(-xOff, yOff, -0.2f - zOff),
                 wheelDirection, wheelAxle, restLength, radius, false);
         Node node4 = new Node("wheel 4 node");
-        Spatial wheelrl = this.getWhellModel();
+        Spatial wheelrl = this.getWhellModel(true);
         wheelrl.setMaterial(mat_wheel);
         node4.attachChild(wheelrl);
         wheelrl.rotate(0, 0, -FastMath.PI/2);

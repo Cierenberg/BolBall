@@ -95,13 +95,18 @@ public class F40 extends AbstractVehicle {
     }
 
     @Override
-    public Spatial getWhellModel() {
+    public Spatial getWhellModel(boolean rear) {
         return this.getAssetManager().loadModel("Models/wheel_export2.j3o");
     }
 
     @Override
     public Vector3f getWheelScale() {
-        return new Vector3f(0.7f, 0.7f, 0.7f);
+        return new Vector3f(0.9f, 0.9f, 0.9f);
+    }
+
+    @Override
+    public float getBodyYaw() {
+        return 0;
     }
 
     
