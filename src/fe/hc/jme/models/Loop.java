@@ -33,16 +33,14 @@ public class Loop{
               
     private void init(Vector3f position) {
         Material loopMaterial = new Material(this.parent.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
-        loopMaterial.setTexture("ColorMap", this.parent.getAssetManager().loadTexture("Textures/steel.png"));
+        loopMaterial.setTexture("ColorMap", this.parent.getAssetManager().loadTexture("Textures/stadion2.png"));
         
         Float offY = this.parent.getEnvironmentHeight(position.x, position.z);
-        if (offY != null) {
-            position.y = offY + Loop.HEIGHT / 2f;
-        }     
-        this.loopSpatial = this.parent.getAssetManager().loadModel("Models/loop.j3o");
+       
+        this.loopSpatial = this.parent.getAssetManager().loadModel("Models/LOOP3.j3o");
         
-        this.loopSpatial.scale(4.5f);
-        this.loopSpatial.rotate(0f, (float) Math.toRadians(-20), 0f);
+        this.loopSpatial.scale(5f);
+        this.loopSpatial.rotate(0f, (float) Math.toRadians(-90), 0f);
         this.loopSpatial.setLocalTranslation(position);
         loopSpatial.setMaterial(loopMaterial);
         this.loopPhysikAlias = new RigidBodyControl(0f);

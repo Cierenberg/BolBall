@@ -97,7 +97,20 @@ public abstract class AbstractVehicle {
     private AudioNode audioGoal = null;
     private long lastYehaw = System.currentTimeMillis();
     private float[] runPitch = {0.5f, 0.5f, 1.5f, 0.004f};
+    private boolean dust = false;
 
+    /** The spots. */
+    protected Spatial[] spots = new Spatial[500];
+    
+    /** The wait. */
+    protected int wait = 0;
+    
+    /** The spot indexs. */
+    protected int spotIndexs = 0;
+    
+    /** The spatial map. */
+    protected Map<String, Spatial> spatialMap = new HashMap<>();
+    
     public AbstractVehicle(AbstractScene parent, Vector3f initPosition, float rotateY) {
         this.parent = parent;
         this.sport = sport;
@@ -106,6 +119,7 @@ public abstract class AbstractVehicle {
         if (offY != null) {
             initPosition.y = offY + 2f;
         }
+                
         this.vehicleNode = new Node("vehicleNode");
         this.assetManager = this.parent.getAssetManager();
         this.smokeMat = new Material(this.parent.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
@@ -170,6 +184,16 @@ public abstract class AbstractVehicle {
         this.audioHorn.play();
     }
 
+    protected Spatial initSpot() {
+        Spatial spot = this.assetManager.loadModel("Models/spot2.j3o");
+        spot.setLocalScale(0.15f);
+        Material mat1 = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
+        mat1.setColor("Color", ColorRGBA.Black);
+        spot.setMaterial(mat1);
+        spot.setShadowMode(RenderQueue.ShadowMode.Off);
+        return spot;
+    }
+ 
     public void setTarget(RigidBodyControl target) {
         this.target = target;
     }
@@ -263,23 +287,29 @@ public abstract class AbstractVehicle {
                 
                 Vector3f position = this.vehicle.getWheel(wheel).getWheelSpatial().getWorldTranslation();
                 position.y -= 0.4f;
-                this.addDust(position);
+                if (this.dust) {
+                    this.addDust(position);
+                } else {
+                    this.moveSpot(position);
+                }
             }
         }
 
-        List<Long> remove = new ArrayList<>();
-        for (long then : this.particleEmitterMap.keySet()) {
-            long now = System.currentTimeMillis();
-            if (now - then > 60000) {
-                this.particleEmitterMap2.get(this.particleEmitterMap.get(then)).killAllParticles();
-                this.parent.getRootNode().detachChild(this.particleEmitterMap.get(then));
-                remove.add(then);
+        if (this.dust) {
+            List<Long> remove = new ArrayList<>();
+            for (long then : this.particleEmitterMap.keySet()) {
+                long now = System.currentTimeMillis();
+                if (now - then > 60000) {
+                    this.particleEmitterMap2.get(this.particleEmitterMap.get(then)).killAllParticles();
+                    this.parent.getRootNode().detachChild(this.particleEmitterMap.get(then));
+                    remove.add(then);
+                }
             }
-
-        }
-        for (long then : remove) {
-            this.particleEmitterMap2.remove(this.particleEmitterMap.get(then));
-            this.particleEmitterMap.remove(then);
+            
+            for (long then : remove) {
+                this.particleEmitterMap2.remove(this.particleEmitterMap.get(then));
+                this.particleEmitterMap.remove(then);
+            }
         }
     }
     
@@ -579,6 +609,14 @@ public abstract class AbstractVehicle {
     public abstract float getBodyYaw();
     
     private void initJeep(Vector3f initPosition) {
+        for (int i = 0; i < this.spots.length; ++i) {
+            this.spots[i] = this.initSpot();
+            this.spots[i].scale(1.1f , 0f, 1.1f);
+            this.spots[i].setLocalTranslation(999999f, -999999f, 999999f);
+            this.spots[i].setShadowMode(RenderQueue.ShadowMode.Off);            
+            this.parent.getRootNode().attachChild(this.spots[i]);
+        }
+        
         Material mat_body;
         mat_body = this.getBodyTextureMaterial();
         this.body = this.getBodyModel();
@@ -760,6 +798,13 @@ public abstract class AbstractVehicle {
         return 0;
     }
 
+    private void moveSpot(Vector3f location) {
+        this.spotIndexs ++;
+        this.spotIndexs %= this.spots.length;
+        this.spots[this.spotIndexs].setLocalTranslation(location);
+    }
+
+    
     private void addDust(Vector3f location) {
         Node tmp = new Node();
         ParticleEmitter dust = new ParticleEmitter("dust effect", Type.Point, 1);

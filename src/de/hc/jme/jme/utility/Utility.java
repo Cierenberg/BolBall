@@ -9,6 +9,7 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -22,6 +23,18 @@ import java.util.List;
  * @author hendrik
  */
 public class Utility {
+    public static void setTextureScale(Spatial spatial, Vector2f vector) {
+        if (spatial instanceof Node) {
+            Node findingnode = (Node) spatial;
+            for (int i = 0; i < findingnode.getQuantity(); i++) {
+                Spatial child = findingnode.getChild(i);
+                Utility.setTextureScale(child, vector);
+            }
+        } else if (spatial instanceof Geometry) {
+            ((Geometry) spatial).getMesh().scaleTextureCoordinates(vector);
+        }
+    }
+        
     public static Vector3f firstRayCut(Vector3f start, Vector3f direction, Spatial spatial) {
          Ray ray = new Ray(start, direction);
         CollisionResults results = new CollisionResults();        

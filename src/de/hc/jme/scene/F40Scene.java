@@ -19,6 +19,7 @@ import de.hc.jme.jme.models.vehicle.Lambo;
 import de.hc.jme.jme.scene.controll.SceneControll;
 import fe.hc.jme.models.Ball;
 import fe.hc.jme.models.Ground;
+import fe.hc.jme.models.Loop;
 
 public class F40Scene extends AbstractScene {
 //    private F40 f40; 
@@ -41,7 +42,9 @@ public class F40Scene extends AbstractScene {
     }
     
     public void init() {
-        this.memUp();
+        if (!this.shouldBeonDesktop()) {
+            this.memUp();
+        }
         Hud.getDefault().setHide(false);
         if (!this.firstInit) {
             this.rootNode.detachAllChildren();
@@ -62,6 +65,7 @@ public class F40Scene extends AbstractScene {
         }
 
         this.ground = new Ground(this, new Vector3f(0, 100, 0));
+        new Loop(this, new Vector3f(40, 116, 20));
         this.getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/Bright/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));        
         this.f40 = new F40(this, new Vector3f(0, 100, -50), 0);
 //        this.f40 = new Lambo(this, new Vector3f(0, 100, -50), 0);
