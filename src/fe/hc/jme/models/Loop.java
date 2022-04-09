@@ -39,7 +39,12 @@ public class Loop{
        
         this.loopSpatial = this.parent.getAssetManager().loadModel("Models/LOOP3.j3o");
         
-        this.loopSpatial.scale(5f);
+//        this.loopSpatial.scale(5f);
+        
+        
+        this.loopSpatial.scale(5f, 5f, 10f);
+        
+        
         this.loopSpatial.rotate(0f, (float) Math.toRadians(-90), 0f);
         this.loopSpatial.setLocalTranslation(position);
         loopSpatial.setMaterial(loopMaterial);

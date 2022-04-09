@@ -122,5 +122,9 @@ public class Lambo extends AbstractVehicle {
         return (float) Math.toRadians(1);
     }
 
-    
+        @Override
+    public String getSpatialString() {
+        return "lambo_export";
+    }
+
 }

@@ -109,5 +109,10 @@ public class F40 extends AbstractVehicle {
         return 0;
     }
 
+    @Override
+    public String getSpatialString() {
+        return "f40_export";
+    }
+
     
 }

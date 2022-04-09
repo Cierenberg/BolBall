@@ -46,9 +46,39 @@ public class Utility {
         }
         return null;
     }
+    
+    public static Spatial firstRayCut(Vector3f start, Vector3f direction, Spatial[] spatial) {
+        Vector3f[] locations = {Utility.firstRayCut(start, direction, spatial[0]), Utility.firstRayCut(start, direction, spatial[1])};
+        if (locations[0] != null && locations[1] != null) {
+            if (start.distance(locations[0]) < start.distance(locations[1])) {
+                return spatial[0];
+            } else {
+                return spatial[1];
+            }
+        }
+        return null;
+    }
+
+    public static boolean isfirstRayCut(Vector3f start, Vector3f direction, Node node, String spatial) {
+        try {
+            Ray ray = new Ray(start, direction);
+            CollisionResults results = new CollisionResults();        
+            results.clear();
+            node.collideWith(ray, results);
+            if (results.size() > 0) {
+                if (results.size() == 2 || results.getCollision(0).toString().contains(spatial) || results.getCollision(0).toString().contains("arrow") || results.getCollision(0).toString().contains("wheel")  || results.getCollision(0).toString().contains("ball")) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (Throwable t) {
+           return true;  
+        }
+    }
+        
 
     public static Vector3f firstRayCut(Vector3f start, Vector3f direction, Node node) {
-         Ray ray = new Ray(start, direction);
+        Ray ray = new Ray(start, direction);
         CollisionResults results = new CollisionResults();        
         results.clear();
         node.collideWith(ray, results);

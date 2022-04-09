@@ -25,6 +25,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import de.hc.jme.gui.hud.Hud;
 import de.hc.jme.jme.scene.controll.SceneControll;
+import de.hc.jme.jme.utility.Utility;
 import de.hc.jme.scene.AbstractScene;
 import fe.hc.jme.models.Arrow;
 import java.util.ArrayList;
@@ -41,8 +42,8 @@ public abstract class AbstractVehicle {
     private AbstractScene parent;
     private AssetManager assetManager;
     protected VehicleControl vehicle;
-    private float maxAccelerationForce = 1.5f;
-    private float maxSpeed = 100;
+    private float maxAccelerationForce = 1.7f;
+    private float maxSpeed = 120;
     private float brakeForce = 20.0f;
     private float[] maxSteeringValue = {0.5f, 0.2f};
     private float currentSteeringValue = 0.0f;
@@ -55,6 +56,8 @@ public abstract class AbstractVehicle {
     private boolean forward = true;
     protected Camera cam;
     protected Vector3f camTarget;
+    protected Vector3f camTargetEmergency;
+    protected long camTargetEmergencyTime = -1;
     private List<Vector3f> lastPositions = new ArrayList<>();
     boolean initCampos = false;
     private float rotateY;
@@ -155,7 +158,7 @@ public abstract class AbstractVehicle {
         this.audioBack = new AudioNode(assetManager, "Sounds/piepen.wav", AudioData.DataType.Buffer);
         this.audioBack.setPositional(false);
         this.audioBack.setLooping(true);
-        this.audioBack.setVolume(1);
+        this.audioBack.setVolume(0.8f);
         this.vehicleNode.attachChild(this.audioBack);
 
         this.audioYeehaw = new AudioNode(assetManager, "Sounds/yeehaw2.wav", AudioData.DataType.Buffer);
@@ -277,10 +280,34 @@ public abstract class AbstractVehicle {
         }
     }
 
+    public boolean isUpside() {
+        return this.arrow.getSpatial().getWorldTranslation().y > this.vehicle.getPhysicsLocation().y;
+    }
+    
     public void updateWheelSkid() {
         float treshold = 0.1f;
-        
 
+        if (this.isUpside()) {
+            boolean start = this.metrics.getAcceleration() > 0 && this.metrics.getSpeed() < 10;
+            boolean brake = this.metrics.getAcceleration() < 0 && this.metrics.getSpeed() > 50;
+//        if (this instanceof F40) {
+//            System.out.println(start);
+//        }
+
+            if (start || brake) {
+                for (int i = 2; i < 4; ++i) {
+                    Vector3f position = this.vehicle.getWheel(i).getWheelSpatial().getWorldTranslation();
+                    position.y -= 0.4f;
+                    if (this.dust) {
+                        this.addDust(position);
+                    } else {
+                        this.moveSpot(position);
+                    }
+                }
+            }
+        }
+
+        
         for (int i = 0; i < 4; ++i) {
             if (this.vehicle.getWheel(i).getSkidInfo() < treshold && this.vehicle.getWheel(i).getSkidInfo() > 0) {
                 int wheel = (i + 1) % 4;
@@ -509,72 +536,99 @@ public abstract class AbstractVehicle {
             }
         }
     }
-
-
+   
+   public abstract String getSpatialString();
     
     public void updateCam() {
         if (!this.gameOver) {
-            if (!this.lastPositions.isEmpty()) {
-                if (this.lastPositions.get(this.lastPositions.size() - 1).distance(this.vehicle.getPhysicsLocation()) > 0.05) {
-//                    this.lastPositionChange = System.currentTimeMillis();
-                    this.lastPositions.add(this.vehicle.getPhysicsLocation());
-                }
-                while (this.lastPositions.size() > 1 && this.lastPositions.get(0).distance(this.vehicle.getPhysicsLocation()) > 25) {
-                    this.lastPositions.remove(0);
-                }
-                if (this.lastPositions.get(0).distance(this.vehicle.getPhysicsLocation()) > 20) {
-                    this.camTarget = this.lastPositions.get(0);
-                    Float offY = this.parent.getEnvironmentHeight(this.camTarget.x, this.camTarget.z);
-
-                    if (offY != null) {
-                        float distance = this.target.getPhysicsLocation().distance(this.vehicle.getPhysicsLocation());
-                        if(this.target != null && distance < 30) {
-//                            System.out.println(this.target.getPhysicsLocation().distance(this.vehicle.getPhysicsLocation()));
-                            offY += (30 - distance) * 2.5F;
-                        } 
-                        this.camTarget.y = offY + 5f;
+            
+            if (System.currentTimeMillis() - this.camTargetEmergencyTime > 1000) {                   
+                if (!this.lastPositions.isEmpty()) {
+                    if (this.lastPositions.get(this.lastPositions.size() - 1).distance(this.vehicle.getPhysicsLocation()) > 0.05) {
+    //                    this.lastPositionChange = System.currentTimeMillis();
+                        this.lastPositions.add(this.vehicle.getPhysicsLocation());
                     }
-                    this.cam.setLocation(camTarget);
-                    this.initCampos = true;
-                }
-            }
-            this.cam.lookAt(this.vehicle.getPhysicsLocation(), Vector3f.UNIT_Y);
-            if (!this.initCampos) {
-
-                Float distance = this.camTarget.distance(this.vehicle.getPhysicsLocation());
-                if (distance > 35) {
-                    this.camTarget = this.vehicle.getPhysicsLocation();
-                    this.camTarget.x += Math.random() * 10 - 5;
-                    this.camTarget.z += Math.random() * 10 - 5;
-                    Float offY = this.parent.getEnvironmentHeight(this.camTarget.x, this.camTarget.z);
-                    
-                    
-                    if (offY != null) {
-                        this.camTarget.y = offY + 1f;
+                    while (this.lastPositions.size() > 1 && this.lastPositions.get(0).distance(this.vehicle.getPhysicsLocation()) > 25) {
+                        this.lastPositions.remove(0);
                     }
-                    if (Math.random() * 100 > 20) {
-                        this.camTarget.y += Math.random() * 5 + 2;
+                    if (this.lastPositions.get(0).distance(this.vehicle.getPhysicsLocation()) > 20) {
+                        this.camTarget = this.lastPositions.get(0);
+                        Float offY = this.parent.getEnvironmentHeight(this.camTarget.x, this.camTarget.z);
+
+                        if (offY != null) {
+                            float distance = this.target.getPhysicsLocation().distance(this.vehicle.getPhysicsLocation());
+                            if(this.target != null && distance < 30) {
+    //                            System.out.println(this.target.getPhysicsLocation().distance(this.vehicle.getPhysicsLocation()));
+                                offY += (30 - distance) * 2.5F;
+                            } 
+                            this.camTarget.y = offY + 5f;
+                        }
+
+                            if (Utility.isfirstRayCut(this.camTarget, this.cam.getDirection(), this.parent.getRootNode(),  this.getSpatialString())) {
+                                this.cam.setLocation(this.camTarget);
+                                this.camTargetEmergency = camTarget;
+                            } else {
+                                if (Utility.isfirstRayCut(this.camTargetEmergency, this.cam.getDirection(), this.parent.getRootNode(),  this.getSpatialString())) {
+                                    this.cam.setLocation(this.camTargetEmergency);
+                                } else {
+                                    while (!Utility.isfirstRayCut(this.camTargetEmergency, this.cam.getDirection(), this.parent.getRootNode(),  this.getSpatialString())) {                                
+                                        this.camTargetEmergency = this.vehicle.getPhysicsLocation();
+                                        this.camTargetEmergency.x += Math.random() * 10 - 5;
+                                        this.camTargetEmergency.y += Math.random() * 10 - 5;
+                                        this.camTargetEmergency.z += Math.random() * 10 - 5;
+                                    }
+                                    this.cam.setLocation(this.camTargetEmergency);
+                                    this.camTargetEmergencyTime = System.currentTimeMillis();
+                                }
+                            }
+
+    //                    this.cam.setLocation(this.camTarget);
+                        this.initCampos = true;
                     }
                 }
+                this.cam.lookAt(this.vehicle.getPhysicsLocation(), Vector3f.UNIT_Y);
+                if (!this.initCampos) {
 
-                Float camspeed = 0.006f * Math.max(35, distance);
-                if (this.cam.getLocation().x < this.camTarget.x - (camspeed + .1f)) {
-                    this.cam.getLocation().x += camspeed;
-                } else if (this.cam.getLocation().x > this.camTarget.x + (camspeed + .1f)) {
-                    this.cam.getLocation().x -= camspeed;
-                }
+                    Float distance = this.camTarget.distance(this.vehicle.getPhysicsLocation());
+                    if (distance > 35) {
+                        this.camTarget = this.vehicle.getPhysicsLocation();
+                        this.camTarget.x += Math.random() * 10 - 5;
+                        this.camTarget.z += Math.random() * 10 - 5;
+                        Float offY = this.parent.getEnvironmentHeight(this.camTarget.x, this.camTarget.z);
 
-                if (this.cam.getLocation().y < this.camTarget.y - (camspeed / 3 + .1f)) {
-                    this.cam.getLocation().y += camspeed / 4;
-                } else if (this.cam.getLocation().y > this.camTarget.y + (camspeed + .1f)) {
-                    this.cam.getLocation().y -= camspeed / 4;
-                }
 
-                if (this.cam.getLocation().z < this.camTarget.z - (camspeed + .1f)) {
-                    this.cam.getLocation().z += camspeed;
-                } else if (this.cam.getLocation().z > this.camTarget.z + (camspeed + .1f)) {
-                    this.cam.getLocation().z -= camspeed;
+                        if (offY != null) {
+                            this.camTarget.y = offY + 1f;
+                        }
+                        if (Math.random() * 100 > 20) {
+                            this.camTarget.y += Math.random() * 5 + 2;
+                        }
+                        this.camTargetEmergency = this.camTarget;
+                    }
+
+                    Float camspeed = 0.006f * Math.max(35, distance);
+                    if (this.cam.getLocation().x < this.camTarget.x - (camspeed + .1f)) {
+                        this.cam.getLocation().x += camspeed;
+                    } else if (this.cam.getLocation().x > this.camTarget.x + (camspeed + .1f)) {
+                        this.cam.getLocation().x -= camspeed;
+                    }
+
+                    if (this.cam.getLocation().y < this.camTarget.y - (camspeed / 3 + .1f)) {
+                        this.cam.getLocation().y += camspeed / 4;
+                    } else if (this.cam.getLocation().y > this.camTarget.y + (camspeed + .1f)) {
+                        this.cam.getLocation().y -= camspeed / 4;
+                    }
+
+                    if (this.cam.getLocation().z < this.camTarget.z - (camspeed + .1f)) {
+                        this.cam.getLocation().z += camspeed;
+                    } else if (this.cam.getLocation().z > this.camTarget.z + (camspeed + .1f)) {
+                        this.cam.getLocation().z -= camspeed;
+                    }
+                } else {
+                        this.cam.setLocation(this.camTargetEmergency);
                 }
+                
+                
             }
             SceneControll.getDefault().checkTarget(this.parent);
         }
