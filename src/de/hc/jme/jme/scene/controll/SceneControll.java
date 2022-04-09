@@ -24,6 +24,7 @@ public class SceneControll implements PhysicsCollisionListener {
     private int[] points = {0, 0};
     private PhysicsCollisionObject rigidBall;
     private AudioNode audioCrash = null;
+    private AudioNode audioCarBounce = null;
     private AudioNode audioKick = null;
     private AudioNode audioBounce = null;
 
@@ -56,6 +57,12 @@ public class SceneControll implements PhysicsCollisionListener {
         this.audioBounce.setLooping(false);
         this.audioBounce.setVolume(1);
         parent.getRootNode().attachChild(this.audioBounce);
+
+        this.audioCarBounce = new AudioNode(parent.getAssetManager(), "Sounds/aufsetzen.wav", AudioData.DataType.Buffer);
+        this.audioCarBounce.setPositional(false);
+        this.audioCarBounce.setLooping(false);
+        this.audioCarBounce.setVolume(0.3f);
+        parent.getRootNode().attachChild(this.audioCarBounce);
     }
     
     public void checkTarget(AbstractScene parent) {
@@ -89,12 +96,23 @@ public class SceneControll implements PhysicsCollisionListener {
       
         boolean aBall = event.getObjectA().equals(this.rigidBall);
         boolean bBall = event.getObjectB().equals(this.rigidBall);
-       
-        boolean crash = aCar && bCar;
+
+//        System.out.println(event.getObjectB().toString());
+        
+        boolean aCrash = event.getObjectA().toString().contains("RigidBodyControl") && !aBall;
+        boolean bCrash = event.getObjectB().toString().contains("RigidBodyControl") && !bBall;
+
+
+        
+        boolean crash = (aCar && bCar);
+        boolean drop = !crash && (aCrash || bCrash);
         boolean kick = (aCar && bBall) || (aBall && bCar);
         
         if (crash) {
             this.audioCrash.play();
+        }
+        if (drop) {
+            this.audioCarBounce.play();
         }
         if (kick) {
             this.audioKick.play();

@@ -98,6 +98,7 @@ public abstract class AbstractVehicle {
     private AudioNode audioBack = null;
     private AudioNode audioYeehaw = null;
     private AudioNode audioGoal = null;
+    private AudioNode audioWheelskid = null;
     private long lastYehaw = System.currentTimeMillis();
     private float[] runPitch = {0.5f, 0.5f, 1.5f, 0.004f};
     private boolean dust = false;
@@ -136,7 +137,7 @@ public abstract class AbstractVehicle {
         this.audioGo.setVolume(2);
         this.vehicleNode.attachChild(this.audioGo);
 
-        this.audioRun = new AudioNode(assetManager, "Sounds/motor.wav", AudioData.DataType.Buffer);
+        this.audioRun = new AudioNode(assetManager, "Sounds/motor3.wav", AudioData.DataType.Buffer);
         this.audioRun.setPositional(false);
         this.audioRun.setLooping(true);
         this.audioRun.setVolume(1);
@@ -172,6 +173,12 @@ public abstract class AbstractVehicle {
         this.audioGoal.setLooping(false);
         this.audioGoal.setVolume(1);
         this.vehicleNode.attachChild(this.audioGoal);
+                
+        this.audioWheelskid = new AudioNode(assetManager, "Sounds/wheelskid.wav", AudioData.DataType.Buffer);
+        this.audioWheelskid.setPositional(false);
+        this.audioWheelskid.setLooping(false);
+        this.audioWheelskid.setVolume(1);
+        this.vehicleNode.attachChild(this.audioWheelskid);
         
         this.audioGo.play();
 
@@ -295,6 +302,7 @@ public abstract class AbstractVehicle {
 //        }
 
             if (start || brake) {
+                this.audioWheelskid.play();
                 for (int i = 2; i < 4; ++i) {
                     Vector3f position = this.vehicle.getWheel(i).getWheelSpatial().getWorldTranslation();
                     position.y -= 0.4f;
@@ -311,7 +319,7 @@ public abstract class AbstractVehicle {
         for (int i = 0; i < 4; ++i) {
             if (this.vehicle.getWheel(i).getSkidInfo() < treshold && this.vehicle.getWheel(i).getSkidInfo() > 0) {
                 int wheel = (i + 1) % 4;
-                
+                this.audioWheelskid.play();
                 Vector3f position = this.vehicle.getWheel(wheel).getWheelSpatial().getWorldTranslation();
                 position.y -= 0.4f;
                 if (this.dust) {
