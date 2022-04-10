@@ -97,7 +97,7 @@ public class SceneControll implements PhysicsCollisionListener {
         boolean aBall = event.getObjectA().equals(this.rigidBall);
         boolean bBall = event.getObjectB().equals(this.rigidBall);
 
-//        System.out.println(event.getObjectB().toString());
+        System.out.println(event.getObjectB().toString());
         
         boolean aCrash = event.getObjectA().toString().contains("RigidBodyControl") && !aBall;
         boolean bCrash = event.getObjectB().toString().contains("RigidBodyControl") && !bBall;

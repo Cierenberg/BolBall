@@ -18,6 +18,7 @@ import de.hc.jme.jme.models.vehicle.F40;
 import de.hc.jme.jme.models.vehicle.Lambo;
 import de.hc.jme.jme.scene.controll.SceneControll;
 import fe.hc.jme.models.Ball;
+import fe.hc.jme.models.Barrel;
 import fe.hc.jme.models.Ground;
 import fe.hc.jme.models.Loop;
 
@@ -66,6 +67,15 @@ public class F40Scene extends AbstractScene {
 
         this.ground = new Ground(this, new Vector3f(0, 100, 0));
         new Loop(this, new Vector3f(40, 116, 20));
+        
+        for (int i = 0; i < 11; i++) {
+            float x = (float) (Math.random() * 80f - 40f);
+            float z = (float) (Math.random() * 100f - 50f);
+            System.out.println(x + "/" + z);
+            this.getRootNode().attachChild(new Barrel(this, new Vector3f(x, 120, z), false, true).getNode());
+            
+        }
+        
         this.getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/Bright/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));        
         this.f40 = new F40(this, new Vector3f(0, 100, -50), 0);
 //        this.f40 = new Lambo(this, new Vector3f(0, 100, -50), 0);

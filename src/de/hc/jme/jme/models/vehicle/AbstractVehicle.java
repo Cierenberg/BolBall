@@ -156,7 +156,7 @@ public abstract class AbstractVehicle {
         this.audioHorn.setVolume(1);
         this.vehicleNode.attachChild(this.audioHorn);
 
-        this.audioBack = new AudioNode(assetManager, "Sounds/piepen.wav", AudioData.DataType.Buffer);
+        this.audioBack = new AudioNode(assetManager, "Sounds/piepen2.wav", AudioData.DataType.Buffer);
         this.audioBack.setPositional(false);
         this.audioBack.setLooping(true);
         this.audioBack.setVolume(0.8f);
@@ -981,6 +981,7 @@ public abstract class AbstractVehicle {
 
     public void resetPosition() {
         this.audioGoal.play();
+        this.camTargetEmergencyTime = -1;
         vehicle.setPhysicsLocation(this.initPosition);
         vehicle.setPhysicsRotation(this.rotation);
         vehicle.setLinearVelocity(Vector3f.ZERO);
@@ -988,7 +989,9 @@ public abstract class AbstractVehicle {
         vehicle.resetSuspension();
           this.camTarget = this.initPosition.clone();
           this.camTarget.y += 75;
+          this.camTargetEmergency = camTarget;
           this.cam.setLocation(camTarget);
+          
     }
 
     private void put(Node node1, Spatial wheelfr) {
