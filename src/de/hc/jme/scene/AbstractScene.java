@@ -147,7 +147,7 @@ public abstract class AbstractScene extends SimpleApplication{
     
     // Project Specials
     
-    public abstract void init();
+    public abstract void init(Ball.TYPE type, Ball.SIZE size);
 
     public abstract void reInit();
     

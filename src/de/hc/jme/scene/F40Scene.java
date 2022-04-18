@@ -42,7 +42,8 @@ public class F40Scene extends AbstractScene {
         this.simpleInitApp();
     }
     
-    public void init() {
+    public void init(Ball.TYPE type, Ball.SIZE size) {
+        SceneControll.getDefault().resetPoints();
         if (!this.shouldBeonDesktop()) {
             this.memUp();
         }
@@ -78,9 +79,8 @@ public class F40Scene extends AbstractScene {
         
         this.getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/Bright/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));        
         this.f40 = new F40(this, new Vector3f(0, 100, -50), 0);
-//        this.f40 = new Lambo(this, new Vector3f(0, 100, -50), 0);
         this.lambo = new Lambo(this,new Vector3f(0, 100, 50), 180);
-        this.ball = new Ball(this, new Vector3f(0, 100, 0), true);
+        this.ball = new Ball(this, new Vector3f(0, 100, 0), true, type, size);
         this.rootNode.attachChild(this.f40.getVehicleNode());
         this.rootNode.attachChild(this.lambo.getVehicleNode());
         this.rootNode.attachChild(this.ball.getNode());

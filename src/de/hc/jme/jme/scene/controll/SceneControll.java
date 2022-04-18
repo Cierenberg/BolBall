@@ -88,6 +88,10 @@ public class SceneControll implements PhysicsCollisionListener {
     public int[] getPoints() {
         return this.points;
     }
+    
+    public void resetPoints() {
+        this.points = new int[] {0, 0};
+    }
   
     @Override
     public void collision(PhysicsCollisionEvent event) {        

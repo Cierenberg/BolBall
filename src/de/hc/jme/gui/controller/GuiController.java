@@ -8,8 +8,10 @@ import de.hc.jme.scene.F40Scene;
 
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.RadioButton;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import fe.hc.jme.models.Ball;
 
 
 public class GuiController implements ScreenController {
@@ -46,8 +48,19 @@ public class GuiController implements ScreenController {
     
     public void startGame(String nextScreen) {
         Screen screen = this.nifty.getScreen("start");
+        Ball.TYPE ballType = Ball.TYPE.RUGBY;
+        Ball.SIZE ballSize = Ball.SIZE.SMALL;
+        if (screen.findNiftyControl("cb2", RadioButton.class).isActivated()) {
+            ballType = Ball.TYPE.SOCCER;
+        }
+        if (screen.findNiftyControl("cb3", RadioButton.class).isActivated()) {
+            ballType = Ball.TYPE.PUC;
+        }
+        if (screen.findNiftyControl("cb5", RadioButton.class).isActivated()) {
+            ballSize = Ball.SIZE.BIG;
+        }
         this.nifty.gotoScreen("hud");
-        F40Scene.getCurrent().init();
+        F40Scene.getCurrent().init(ballType, ballSize);
     }
     
     public void quitGame() {
