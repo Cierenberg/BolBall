@@ -17,11 +17,13 @@ import fe.hc.jme.models.Ball;
 public class GuiController implements ScreenController {
     
     private Nifty nifty;
+    private boolean visible = true;
     
     public GuiController() {
         super();
         this.init();
     }
+    
     
     private void init() {
         Hud.getDefault().setHide(true);
@@ -43,6 +45,8 @@ public class GuiController implements ScreenController {
     public void start() {
         Hud.getDefault().setHide(true);
         Hud.getDefault().clean();
+        this.visible = true;
+        System.out.println(this.visible);
         this.nifty.gotoScreen("start");
     }
     
@@ -60,7 +64,12 @@ public class GuiController implements ScreenController {
             ballSize = Ball.SIZE.BIG;
         }
         this.nifty.gotoScreen("hud");
+        this.visible = false;
         F40Scene.getCurrent().init(ballType, ballSize);
+    }
+    
+    public boolean isVisible() {
+        return this.visible;
     }
     
     public void quitGame() {

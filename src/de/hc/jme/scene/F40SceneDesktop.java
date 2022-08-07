@@ -19,7 +19,8 @@ import java.awt.GraphicsEnvironment;
  *
  * @author hendrik
  */
-public class F40SceneDesktop extends F40Scene{
+public class F40SceneDesktop extends F40Scene {
+
     /**
      * Inits the display.
      *
@@ -53,7 +54,7 @@ public class F40SceneDesktop extends F40Scene{
         F40Scene.CURRENT.start();
         System.out.println("######");
     }
- 
+
     /* (non-Javadoc)
      * @see de.hc.custom.scene.PoolScene#setUpLight()
      */
@@ -76,12 +77,12 @@ public class F40SceneDesktop extends F40Scene{
 //        this.dlsr2.setShadowIntensity(0.7f);
         this.viewPort.addProcessor(dlsr);
     }
-    
+
     /* (non-Javadoc)
      * @see de.hc.custom.scene.PoolScene#shouldBeonDesktop()
      */
     @Override
     public boolean shouldBeonDesktop() {
         return true;
-    }   
+    }
 }

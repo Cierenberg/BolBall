@@ -1,4 +1,5 @@
 package de.hc.jme.scene;
+import ch.qos.logback.classic.util.ContextInitializer;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.input.MouseInput;
 import com.jme3.input.KeyInput;
@@ -9,7 +10,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
-import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
 import de.hc.jme.gui.controller.GuiController;
 import de.hc.jme.gui.hud.Hud;
@@ -23,9 +23,6 @@ import fe.hc.jme.models.Ground;
 import fe.hc.jme.models.Loop;
 
 public class F40Scene extends AbstractScene {
-//    private F40 f40; 
-//    private Lambo lambo; 
-//    protected DirectionalLightShadowRenderer dlsr2;
     private AbstractVehicle f40; 
     private AbstractVehicle lambo; 
     private Ball ball;
@@ -33,7 +30,8 @@ public class F40Scene extends AbstractScene {
     private Camera cam2;
     private boolean firstInit = true;
     protected ViewPort view2;
-    
+    private float lastRatio = -1;
+    private long niftyChange = -1;
     
     @Override
     public void reInit() {
@@ -213,13 +211,29 @@ public class F40Scene extends AbstractScene {
 
     @Override
     public void simpleUpdate(float tpf) {
+        if (this.guiController != null && this.guiController.isVisible()) {
+            if (this.niftyChange > 0) {
+                if (System.currentTimeMillis() - this.niftyChange > 4000) {
+                    this.niftyChange = -1;
+                    this.guiController.resetGui();
+                }
+            }
+            float ratio = (float) this.getAppSettings().getWidth() / (float) this.getAppSettings().getHeight();
+//            System.out.println(this.getAppSettings().getWidth() + " / " + this.getAppSettings().getHeight() + " : " + ratio);
+            if (this.lastRatio < 0) {
+                this.lastRatio = ratio;
+            } else if (this.lastRatio != ratio) {
+                this.niftyChange = System.currentTimeMillis();
+                this.lastRatio = ratio;
+            }
+        }
         if (this.f40 != null && this.lambo != null) {
             this.f40.update();
             this.lambo.update();
             Hud.getDefault().update();
         } else {
             Hud.getDefault().clean();
-        }
+        } 
     }
     
     public boolean shouldBeonDesktop() {
